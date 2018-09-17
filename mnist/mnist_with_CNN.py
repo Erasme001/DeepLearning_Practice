@@ -7,13 +7,30 @@
 @Software: PyCharm
 @File    : mnist_with_CNN.py
 @Time    : 2018-09-17 18:49
-@Desc    : 基于CNN的mnist手写体识别
+@Desc    : 基于CNN的mnist手写体识别，准确率0.9911
 """
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import os
+import time
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
+
+def get_lapse_time(start_time, end_time):
+    """
+    格式化时间，可用于计算程序运行时间
+    :param start_time: 开始时间
+    :param end_time: 结束时间
+    :return: 时分秒显示
+    """
+    start_num = 3600 * int(start_time[:2]) + 60 * int(start_time[2:4]) + int(start_time[-2:])
+    end_num = 3600 * int(end_time[:2]) + 60 * int(end_time[2:4]) + int(end_time[-2:])
+    hours = (end_num - start_num) // 3600
+    minutes = ((end_num - start_num) % 3600) // 60
+    seconds = ((end_num - start_num) % 3600) % 60
+    gap_time = "%02d:%02d:%02d" % (hours, minutes, seconds)
+    return gap_time
 
 
 def weight_variable(shape):
@@ -35,10 +52,11 @@ def max_pool_2x2(x):
 
 
 if __name__ == '__main__':
+    start = time.strftime("%H %M %S")
     sess = tf.InteractiveSession()
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True
-    sess = tf.Session(config=config)
+    # config = tf.ConfigProto()
+    # config.gpu_options.allow_growth = True
+    # sess = tf.Session(config=config)
 
     mnist = input_data.read_data_sets("./MNIST_data", one_hot=True)
     x = tf.placeholder(tf.float32, shape=[None, 784])
@@ -72,18 +90,23 @@ if __name__ == '__main__':
     b_fc2 = bias_variable([10])
     y_conv = tf.nn.softmax(tf.matmul(h_fc1_drop, W_fc2) + b_fc2)
 
-    # test
+    # train
     cross_entropy = -tf.reduce_sum(y_ * tf.log(y_conv))
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
     sess.run(tf.global_variables_initializer())
+    train_start = time.strftime("%H %M %S")
     for i in range(20000):
         batch = mnist.train.next_batch(50)
         if i % 100 == 0:
-            train_accuracy = accuracy.eval(feed_dict={
-                x: batch[0], y_: batch[1], keep_prob: 1.0})
+            train_accuracy = accuracy.eval(feed_dict={x: batch[0], y_: batch[1], keep_prob: 1.0})
             print("step %d, training accuracy %g" % (i, train_accuracy))
         train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+    train_end = time.strftime("%H %M %S")
 
+    # test
     print("test accuracy %g" % accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+    end = time.strftime("%H %M %S")
+    print("训练用时：%s" % get_lapse_time(train_start, train_end))
+    print("程序运行用时：%s" % get_lapse_time(start, end))
