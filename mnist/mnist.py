@@ -31,7 +31,6 @@ def get_lapse_time(start_time, end_time):
 
 
 start = time.strftime("%H %M %S")
-start_time = time.time()
 # MNIST数据存放的路径
 file = "./MNIST_DATA"
 
