@@ -2,12 +2,11 @@
 # -*- encoding: utf-8 -*-
 """
 @Author  : Kerr
-@License : Copyright(C) 2018, Get
 @Contact : 905392619@qq.com
 @Software: PyCharm
 @File    : mnist2.py
 @Time    : 2018-09-17 14:15
-@Desc    :
+@Desc    : 梯度下降 softmox回归第2版
 """
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
