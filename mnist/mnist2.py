@@ -7,7 +7,7 @@
 @Software: PyCharm
 @File    : mnist2.py
 @Time    : 2018-09-17 14:15
-@Desc    : 
+@Desc    :
 """
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
