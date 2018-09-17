@@ -2,7 +2,6 @@
 # -*- encoding: utf-8 -*-
 """
 @Author  : Kerr
-@License : Copyright(C) 2018, Get
 @Contact : 905392619@qq.com
 @Software: PyCharm
 @File    : mnist2.py
