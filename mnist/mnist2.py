@@ -7,7 +7,7 @@
 @Software: PyCharm
 @File    : mnist2.py
 @Time    : 2018-09-17 14:15
-@Desc    :
+@Desc    : 梯度下降 softmox回归第2版
 """
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
