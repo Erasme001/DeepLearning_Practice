@@ -89,17 +89,14 @@ def read_cifar10(filename_queue):
     # The remaining bytes after the label represent the image, which we reshape
     # from [depth * height * width] to [depth, height, width].
     depth_major = tf.reshape(
-        tf.strided_slice(record_bytes, [label_bytes],
-                         [label_bytes + image_bytes]),
-        [result.depth, result.height, result.width])
+        tf.strided_slice(record_bytes, [label_bytes], [label_bytes + image_bytes]), [result.depth, result.height, result.width])
     # Convert from [depth, height, width] to [height, width, depth].
     result.uint8image = tf.transpose(depth_major, [1, 2, 0])
 
     return result
 
 
-def _generate_image_and_label_batch(image, label, min_queue_examples,
-                                    batch_size, shuffle):
+def _generate_image_and_label_batch(image, label, min_queue_examples, batch_size, shuffle):
     """Construct a queued batch of images and labels.
 
     Args:
@@ -148,8 +145,7 @@ def distorted_inputs(data_dir, batch_size):
       images: Images. 4D tensor of [batch_size, IMAGE_SIZE, IMAGE_SIZE, 3] size.
       labels: Labels. 1D tensor of [batch_size] size.
     """
-    filenames = [os.path.join(data_dir, 'data_batch_%d.bin' % i)
-                 for i in range(1, 6)]
+    filenames = [os.path.join(data_dir, 'data_batch_%d.bin' % i) for i in range(1, 6)]
     for f in filenames:
         if not tf.gfile.Exists(f):
             raise ValueError('Failed to find file: ' + f)
@@ -175,10 +171,8 @@ def distorted_inputs(data_dir, batch_size):
 
     # Because these operations are not commutative, consider randomizing
     # the order their operation.
-    distorted_image = tf.image.random_brightness(distorted_image,
-                                                 max_delta=63)
-    distorted_image = tf.image.random_contrast(distorted_image,
-                                               lower=0.2, upper=1.8)
+    distorted_image = tf.image.random_brightness(distorted_image, max_delta=63)
+    distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)
 
     # Subtract off the mean and divide by the variance of the pixels.
     float_image = tf.image.per_image_standardization(distorted_image)
@@ -189,15 +183,12 @@ def distorted_inputs(data_dir, batch_size):
 
     # Ensure that the random shuffling has good mixing properties.
     min_fraction_of_examples_in_queue = 0.4
-    min_queue_examples = int(NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN *
-                             min_fraction_of_examples_in_queue)
+    min_queue_examples = int(NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN * min_fraction_of_examples_in_queue)
     print('Filling queue with %d CIFAR images before starting to train. '
           'This will take a few minutes.' % min_queue_examples)
 
     # Generate a batch of images and labels by building up a queue of examples.
-    return _generate_image_and_label_batch(float_image, read_input.label,
-                                           min_queue_examples, batch_size,
-                                           shuffle=True)
+    return _generate_image_and_label_batch(float_image, read_input.label, min_queue_examples, batch_size, shuffle=True)
 
 
 def inputs(eval_data, data_dir, batch_size):
@@ -213,8 +204,7 @@ def inputs(eval_data, data_dir, batch_size):
       labels: Labels. 1D tensor of [batch_size] size.
     """
     if not eval_data:
-        filenames = [os.path.join(data_dir, 'data_batch_%d.bin' % i)
-                     for i in range(1, 6)]
+        filenames = [os.path.join(data_dir, 'data_batch_%d.bin' % i) for i in range(1, 6)]
         num_examples_per_epoch = NUM_EXAMPLES_PER_EPOCH_FOR_TRAIN
     else:
         filenames = [os.path.join(data_dir, 'test_batch.bin')]
@@ -236,8 +226,7 @@ def inputs(eval_data, data_dir, batch_size):
 
     # Image processing for evaluation.
     # Crop the central [height, width] of the image.
-    resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image,
-                                                           height, width)
+    resized_image = tf.image.resize_image_with_crop_or_pad(reshaped_image, height, width)
 
     # Subtract off the mean and divide by the variance of the pixels.
     float_image = tf.image.per_image_standardization(resized_image)
@@ -248,10 +237,7 @@ def inputs(eval_data, data_dir, batch_size):
 
     # Ensure that the random shuffling has good mixing properties.
     min_fraction_of_examples_in_queue = 0.4
-    min_queue_examples = int(num_examples_per_epoch *
-                             min_fraction_of_examples_in_queue)
+    min_queue_examples = int(num_examples_per_epoch * min_fraction_of_examples_in_queue)
 
     # Generate a batch of images and labels by building up a queue of examples.
-    return _generate_image_and_label_batch(float_image, read_input.label,
-                                           min_queue_examples, batch_size,
-                                           shuffle=False)
+    return _generate_image_and_label_batch(float_image, read_input.label, min_queue_examples, batch_size, shuffle=False)
