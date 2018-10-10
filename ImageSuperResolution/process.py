@@ -8,7 +8,7 @@ import tempfile
 import subprocess
 import tensorflow as tf
 import numpy as np
-from DeepLearning_Practice.ImageSuperResolution import tfimage as im
+import tfimage as im
 import threading
 import time
 import multiprocessing
